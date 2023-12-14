@@ -4,9 +4,5 @@ torchvision==0.8.2+cu110
 torchaudio==0.7.2
 --find-links https://download.openmmlab.com/mmcv/dist/cu110/torch1.7.1/index.html
 mmcv-full==1.4.8
--r requirements/build.txt
--r requirements/optional.txt
--r requirements/runtime.txt
--r requirements/tests.txt
 facenet-pytorch
 seaborn
