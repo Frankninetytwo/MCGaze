@@ -1,4 +1,11 @@
+--find-links https://download.pytorch.org/whl/torch_stable.html
+-r torchvision==0.8.2+cu110 -f
+-r torchaudio==0.7.2 -f
+--find-links https://download.openmmlab.com/mmcv/dist/cu110/torch1.7.1/index.html
+-r mmcv-full==1.4.8 -f
 -r requirements/build.txt
 -r requirements/optional.txt
 -r requirements/runtime.txt
 -r requirements/tests.txt
+-r facenet-pytorch
+-r seaborn
