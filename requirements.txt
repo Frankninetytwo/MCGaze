@@ -1,4 +1,5 @@
 --find-links https://download.pytorch.org/whl/torch_stable.html
+-r torch==1.7.1+cu110
 -r torchvision==0.8.2+cu110
 -r torchaudio==0.7.2
 --find-links https://download.openmmlab.com/mmcv/dist/cu110/torch1.7.1/index.html
