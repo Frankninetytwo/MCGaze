@@ -1,0 +1,15 @@
+NOTE: The $ symbol means that the text that follows must be executed in terminal. All other instructions without a $ you need to do manually (e.g. downloading some stuff and putting it into some folder).
+
+01. $ conda create -n MCGaze python=3.9
+02. $ conda activate MCGaze
+03. $ pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html
+04. $ pip install mmcv-full==1.4.8 -f https://download.openmmlab.com/mmcv/dist/cu110/torch1.7.1/index.html
+05. $ git clone https://github.com/Frankninetytwo/MCGaze.git
+06. $ cd MCGaze
+07. $ pip install -v -e .
+08. download https://drive.google.com/file/d/1ru0xhuB5N9kwvN9XLvZMQvVSfOgtbxmq/view?usp=drive_link
+09. put downloaded multiclue_gaze_r50_gaze360.pth into MCGaze/ckpts folder
+10. download https://drive.google.com/file/d/1gglIwqxaH2iTvy6lZlXuAcMpd_U0GCUb/view?usp=sharing
+11. put downloaded crowdhuman_yolov5m.pt into MCGaze/MCGaze_demo folder
+
+Feature extraction works exactly the same way as in my L2CS-Net repo. It's explained at the end of that repo's README.md. The only difference is that the MCGaze feature extraction scripts are not located in the main folder, but in MCGaze/MCGaze_demo.
