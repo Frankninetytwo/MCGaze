@@ -7,9 +7,9 @@ NOTE: The $ symbol means that the text that follows must be executed in terminal
 05. $ git clone https://github.com/Frankninetytwo/MCGaze.git
 06. $ cd MCGaze
 07. $ pip install -v -e .
-08. pip install requests
-09. pip install facenet_pytorch
-10. pip install seaborn
+08. $ pip install requests
+09. $ pip install facenet_pytorch
+10. $ pip install seaborn
 11. download https://drive.google.com/file/d/1ru0xhuB5N9kwvN9XLvZMQvVSfOgtbxmq/view?usp=drive_link
 12. put downloaded multiclue_gaze_r50_gaze360.pth into MCGaze/ckpts folder
 13. download https://drive.google.com/file/d/1gglIwqxaH2iTvy6lZlXuAcMpd_U0GCUb/view?usp=sharing
