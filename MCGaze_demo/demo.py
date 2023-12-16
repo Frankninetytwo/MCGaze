@@ -43,7 +43,7 @@ def get_source_video_info():
         # Discard first line as it is just a description of the contents.
         f.readline()
         source_video_path = f.readline()
-        fps = int(f.readline())
+        fps = float(f.readline())
         
         return source_video_path, fps
 
