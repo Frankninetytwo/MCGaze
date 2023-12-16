@@ -52,7 +52,6 @@ def delete_files_in_folder(folder_path):
         if os.path.isfile(file_path):
             # 如果是文件，删除它
             os.remove(file_path)
-            print(f"deleting file: {file_path}")
         elif os.path.isdir(file_path):
             # 如果是文件夹，递归删除它
             delete_files_in_folder(file_path)
