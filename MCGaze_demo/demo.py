@@ -58,22 +58,22 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
         
         #f.write('frame,timestamp in s,yaw in radians,pitch in radians\n')
         f.write('frame,timestamp in s,x of gaze vector,y of gaze vector,z of gaze vector\n')
-
-        for current_frame in range(0, len(video_clip_list)):
+        print('len(video_clip_list) =', len(video_clip_list))
+        for current_frame, video_clip in enumerate(video_clip_list):
             print('{},{},{}\n'.format(
                 current_frame+1,
-                round((current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
+                round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
                 # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0]
+                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0]
                 ))
             
             f.write('{},{},{},{},{}\n'.format(
                 current_frame+1,
-                round((current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
+                round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
                 # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][0],
-                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][1],
-                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][2]
+                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0][0][0],
+                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0][0][1],
+                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0][0][2]
                 ))
 
 
