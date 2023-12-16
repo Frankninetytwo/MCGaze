@@ -58,7 +58,7 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
         
         #f.write('frame,timestamp in s,yaw in radians,pitch in radians\n')
         f.write('frame,timestamp in s,x of gaze vector,y of gaze vector,z of gaze vector\n')
-        print('len(video_clip_list) =', len(video_clip_list))
+        
         for current_frame, video_clip in enumerate(video_clip_list):
             print('{},{},{}\n'.format(
                 current_frame+1,
@@ -220,7 +220,6 @@ if __name__ == '__main__':
 
 
 
-    print('len(video_clip_set) =', len(video_clip_set))
     for vid_clip in video_clip_set:
         for i,frame_id in enumerate(vid_clip['frame_id']):  # 遍历每一帧
             cur_img = cv2.imread(str(Path.cwd()) + "/frames/"+str(vid_clip['frame_id'][i])+".jpg")
@@ -247,7 +246,7 @@ if __name__ == '__main__':
     size = (imgInfo[1],imgInfo[0])  #获取图片宽高度信息
     print('image (width, height) =', size)
 
-
+    print(video_clip_set)
     write_estimated_gaze_to_file(Path(source_video_path).stem, video_clip_set, video_fps)
 
 
