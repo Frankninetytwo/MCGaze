@@ -15,7 +15,6 @@ import torch
 from mmcv.parallel import collate, scatter
 import numpy as np
 
-import pathlib
 import math
 import argparse
 
@@ -53,7 +52,7 @@ def get_source_video_info():
 # where filename_of_video_without_file_extension is a parameter of this function.
 def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video_clip_list, video_fps):
 
-    output_path = str(pathlib.Path.cwd()) + '/Output/' + filename_of_video_without_file_extension + '.csv'
+    output_path = str(Path.cwd()) + '/Output/' + filename_of_video_without_file_extension + '.csv'
     
     with open(output_path, 'w') as f:
         
@@ -240,12 +239,12 @@ if __name__ == '__main__':
     print(size)
 
 
-    write_estimated_gaze_to_file(pathlib.Path.stem(source_video_path), video_clip_set, video_fps)
+    write_estimated_gaze_to_file(Path(source_video_path).stem, video_clip_set, video_fps)
 
 
     if args.v:
         fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-        videoWrite = cv2.VideoWriter(str(Path.cwd()) + '/Output/' + pathlib.Path.stem(source_video_path) + '.mp4',fourcc,video_fps,size)
+        videoWrite = cv2.VideoWriter(str(Path.cwd()) + '/Output/' + Path(source_video_path).stem + '.mp4',fourcc,video_fps,size)
         files = os.listdir(str(Path.cwd()) + '/new_frames/')
         out_num = len(files)
         for i in range(0,out_num):
