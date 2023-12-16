@@ -6,7 +6,7 @@ NOTE: The $ symbol means that the text that follows must be executed in terminal
 Note that the official MCGaze github page recommends to:<br>
 $ pip install torch==1.7.1+cu110 torchvision==0.8.2+cu110 torchaudio==0.7.2 -f https://download.pytorch.org/whl/torch_stable.html<br>
 But **don't do this**! You will probably not be able to run the MCGaze demo for the reason outlined under step 4 (see below).
-04. MMCV_WITH_OPS=1 FORCE_CUDA=1 pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html<br>
+04. $ MMCV_WITH_OPS=1 FORCE_CUDA=1 pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html<br>
 The official MCGaze github page tells you to install the following:<br>
 $ pip install mmcv-full==1.4.8 -f https://download.openmmlab.com/mmcv/dist/cu110/torch1.7.1/index.html<br>
 But **don't do this**! With torch 1.7.1 and mmcv-full 1.4.8 the MMCV CUDA Compiler ($ python MCGaze/mmdet/utils/collect_env.py) doesn't get installed! Adding MMCV_WITH_OPS=1 FORCE_CUDA=1 in this case is not helping either.
