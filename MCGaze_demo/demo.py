@@ -220,6 +220,7 @@ if __name__ == '__main__':
 
 
 
+    print('len(video_clip_set) =', len(video_clip_set))
     for vid_clip in video_clip_set:
         for i,frame_id in enumerate(vid_clip['frame_id']):  # 遍历每一帧
             cur_img = cv2.imread(str(Path.cwd()) + "/frames/"+str(vid_clip['frame_id'][i])+".jpg")
