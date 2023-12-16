@@ -60,13 +60,21 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
         f.write('frame,timestamp in s,unknown 1,unknown 2\n')
 
         for current_frame in range(0, len(video_clip_list)):
+            print('{},{},{},{}\n'.format(
+                current_frame+1,
+                round((current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
+                # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
+                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0']
+                ))
+            """
             f.write('{},{},{},{}\n'.format(
                 current_frame+1,
                 round((current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
                 # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                math.nan if video_clip_list[current_frame].has_key('gaze_p1') else video_clip_list[current_frame]['gaze_p0'][0][0],
-                math.nan if video_clip_list[current_frame].has_key('gaze_p1') else video_clip_list[current_frame]['gaze_p0'][0][0]
+                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][0],
+                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][1]
                 ))
+            """
 
 
 def load_datas(data, test_pipeline, datas):
