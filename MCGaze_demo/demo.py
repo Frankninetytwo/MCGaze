@@ -1,5 +1,4 @@
 # This script is based on MCGaze/MCGaze_demo/demo.ipynb of https://github.com/zgchen33/mcgaze.
-# All English comments were added by me (Frank Schilling) to understand the code better.
 # Note: If there is more than one human head detected in a video frame then the estimated gaze
 # for that frame in Output/processed_video.csv will be nan!
 
@@ -96,7 +95,6 @@ def infer(datas,model,clip,i):
     gaze_dim = det_gazes['gaze_score'].size(1)
     det_fusion_gaze = det_gazes['gaze_score'].view((det_gazes['gaze_score'].shape[0], 1, gaze_dim))
     clip['gaze_p'+str(i)].append(det_fusion_gaze.cpu().numpy())
-    #print("det_fusion_gaze =", det_fusion_gaze.cpu().numpy(), "\ngaze_dim =", gaze_dim)
 
 
 
@@ -107,25 +105,15 @@ if __name__ == '__main__':
     frame_id = 0
     person_num = 0
     video_clip=None
-    # List of dictionaries where each dictionary represents one frame of the video.
-    # I have commented the loops below, explaining exactly what data each loop writes into this list.
+    
     video_clip_set = []
     vid_len = len(os.listdir(str(Path.cwd()) + '/frames'))
-    # This loop fills the list video_clip_set with dictionaries of following structure:
-    # dictionary['frame_id'][0] holds the index of the frame (as you can see by the [0] indexing
-    # dictionary['frame_id'] seems to be a list for some reason, but it holds only 1 element). 
-    # dictionary['person_num'] stores the amount of human heads that could be found in that frame.
-    # If the amount of human heads in the next frame hasn't changed, then the dictionary doesn't contain
-    # the key 'person_num'.
-    # dictionary['p0'], dictionary['p1'], ... hold the position (min and max of x and y coordinates)
-    # of the corresponding human head p0, p1, ... in the current video frame.
+    
     while frame_id < vid_len:
         frame = cv2.imread(str(Path.cwd()) + ('/frames/%d.jpg' % frame_id))
         w,h,c = frame.shape
         txt_path = str(Path.cwd()) + ('/result/labels/%d.txt' % frame_id)
         f = open(txt_path, 'r')
-        # Contains the positions (min and max of x and y coordinates) of every human head that could be detected in
-        # the current frame. This data is aquired from the result/labels folder that is produced by head_det.py.
         face_bbox = []
         for line in f.readlines():
             line = line.strip()
@@ -184,9 +172,6 @@ if __name__ == '__main__':
 
     max_len = 100
 
-    # This loop adds to each dictionary of the list video_clip_set the keys
-    # 'gaze_p0', 'gaze_p1', ... where the corresponding value is the estimated
-    # gaze of the corresponding human head p0, p1, ... in the current video frame.
     for clip in video_clip_set:
         frame_id = clip['frame_id']
         person_num = clip['person_num']
@@ -208,9 +193,7 @@ if __name__ == '__main__':
                 # print(head_crop.shape)
                 cur_data = dict(filename=j,ori_filename=111,img=head_crop,img_shape=(w_n,h_n,3),ori_shape=(2*l,2*l,3),img_fields=['img'])
                 load_datas(cur_data,test_pipeline,datas)
-                # Not sure what the purpose of max_len or the loops index j is, because
-                # clip['frame_id'] should always be of length 1 as it represents one frame,
-                # hence j should always be 0 and the below if statement becomes always true. 
+                
                 if len(datas)>max_len or j==(len(frame_id)-1):
                     infer(datas,model,clip,i)
                     datas = []
