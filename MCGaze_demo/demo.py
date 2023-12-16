@@ -57,9 +57,10 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
     with open(output_path, 'w') as f:
         
         #f.write('frame,timestamp in s,yaw in radians,pitch in radians\n')
-        f.write('frame,timestamp in s,unknown 1,unknown 2\n')
+        f.write('frame,timestamp in s,x of gaze vector,y of gaze vector,z of gaze vector\n')
 
         for current_frame in range(0, len(video_clip_list)):
+            """
             print('{},{},{}\n'.format(
                 current_frame+1,
                 round((current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
@@ -67,14 +68,15 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
                 math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0']
                 ))
             """
-            f.write('{},{},{},{}\n'.format(
+            
+            f.write('{},{},{},{},{}\n'.format(
                 current_frame+1,
                 round((current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
                 # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
                 math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][0],
-                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][1]
+                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][1],
+                math.nan if ('gaze_p1' in video_clip_list[current_frame]) else video_clip_list[current_frame]['gaze_p0'][0][2]
                 ))
-            """
 
 
 def load_datas(data, test_pipeline, datas):
@@ -96,7 +98,7 @@ def infer(datas,model,clip,i):
     gaze_dim = det_gazes['gaze_score'].size(1)
     det_fusion_gaze = det_gazes['gaze_score'].view((det_gazes['gaze_score'].shape[0], 1, gaze_dim))
     clip['gaze_p'+str(i)].append(det_fusion_gaze.cpu().numpy())
-    print("det_fusion_gaze =", det_fusion_gaze, "\ngaze_dim =", gaze_dim)
+    #print("det_fusion_gaze =", det_fusion_gaze.cpu().numpy(), "\ngaze_dim =", gaze_dim)
 
 
 
@@ -244,7 +246,7 @@ if __name__ == '__main__':
     source_video_path, video_fps = get_source_video_info()
     imgInfo = img.shape
     size = (imgInfo[1],imgInfo[0])  #获取图片宽高度信息
-    print(size)
+    print('image (width, height) =', size)
 
 
     write_estimated_gaze_to_file(Path(source_video_path).stem, video_clip_set, video_fps)
