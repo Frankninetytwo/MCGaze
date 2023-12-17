@@ -80,7 +80,7 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
                     round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
                     1 if is_exactly_one_person_in_frame else 0,
                     # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                    round(math.atan2(normalized_gaze_vector[0], normalized_gaze_vector[2]), 3) if is_exactly_one_person_in_frame else math.nan,
+                    round(math.atan2(normalized_gaze_vector[2], normalized_gaze_vector[0]), 3) if is_exactly_one_person_in_frame else math.nan,
                     round(math.asin(-normalized_gaze_vector[1]), 3) if is_exactly_one_person_in_frame else math.nan,
                     -video_clip['gaze_p0'][i][0][0] if is_exactly_one_person_in_frame else math.nan, # adjust to OpenFace format by negating it
                     -video_clip['gaze_p0'][i][0][1] if is_exactly_one_person_in_frame else math.nan, # adjust to OpenFace format by negating it
