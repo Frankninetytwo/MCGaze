@@ -117,7 +117,7 @@ def detect(opt,save_img=False):
                             plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=3)
 
             # Print time (inference + NMS)
-            #print(f'{s}Done. ({t2 - t1:.3f}s)')
+            print(f'{s}Done. ({t2 - t1:.3f}s)')
 
             # Stream results
             if view_img:
@@ -128,7 +128,7 @@ def detect(opt,save_img=False):
 
     if save_txt or save_img:
         s = f"{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-        print(f"{s}")
+        print(f"{s}\n")
 
     #print(f'Done. ({time.time() - t0:.3f}s)')
 

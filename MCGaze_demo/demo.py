@@ -56,25 +56,27 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
     
     with open(output_path, 'w') as f:
         
-        f.write('frame,timestamp in s,x of gaze vector,y of gaze vector,z of gaze vector\n')#,yaw in radians,pitch in radians\n')
+        f.write('frame,timestamp in s,success,x of gaze vector,y of gaze vector,z of gaze vector\n')#,yaw in radians,pitch in radians\n')
         
         for video_clip in video_clip_list:
             for i, current_frame in enumerate(video_clip['frame_id']):
+                """
                 print('frame: {}, timestamp: {}, gaze vector of person 0 in frame {}: {}\n'.format(
                     current_frame+1,
                     round(float(current_frame) * (1.0 / video_fps), 3),
                     current_frame,
                     video_clip['gaze_p0'][i][0]
                     ))
-                
+                """
                 isExactlyOnePersonInFrame = ('gaze_p0' in video_clip) and ('gaze_p1' not in video_clip)
 
                 f.write('{},{},{},{},{}\n'.format(
                     current_frame+1,
                     round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
+                    1 if isExactlyOnePersonInFrame else 0,
                     # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                    video_clip['gaze_p0'][i][0][0] if isExactlyOnePersonInFrame else math.nan,
-                    video_clip['gaze_p0'][i][0][1] if isExactlyOnePersonInFrame else math.nan,
+                    -video_clip['gaze_p0'][i][0][0] if isExactlyOnePersonInFrame else math.nan, # adjust to OpenFace format by negating it
+                    -video_clip['gaze_p0'][i][0][1] if isExactlyOnePersonInFrame else math.nan, # adjust to OpenFace format by negating it
                     video_clip['gaze_p0'][i][0][2] if isExactlyOnePersonInFrame else math.nan
                     ))
 
