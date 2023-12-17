@@ -60,17 +60,10 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
         
         for video_clip in video_clip_list:
             for i, current_frame in enumerate(video_clip['frame_id']):
-                """
-                print('frame: {}, timestamp: {}, gaze vector of person 0 in frame {}: {}\n'.format(
-                    current_frame+1,
-                    round(float(current_frame) * (1.0 / video_fps), 3),
-                    current_frame,
-                    video_clip['gaze_p0'][i][0]
-                    ))
-                """
+
                 isExactlyOnePersonInFrame = ('gaze_p0' in video_clip) and ('gaze_p1' not in video_clip)
 
-                f.write('{},{},{},{},{}\n'.format(
+                f.write('{},{},{},{},{},{}\n'.format(
                     current_frame+1,
                     round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
                     1 if isExactlyOnePersonInFrame else 0,
