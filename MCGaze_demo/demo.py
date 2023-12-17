@@ -64,7 +64,7 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
                     current_frame+1,
                     round(float(current_frame) * (1.0 / video_fps), 3),
                     current_frame,
-                    video_clip['gaze_p0'][i]
+                    video_clip['gaze_p0'][i][0]
                     ))
                 
                 isExactlyOnePersonInFrame = ('gaze_p0' in video_clip) and ('gaze_p1' not in video_clip)
@@ -73,9 +73,9 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
                     current_frame+1,
                     round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
                     # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                    video_clip['gaze_p0'][i][0] if isExactlyOnePersonInFrame else math.nan,
-                    video_clip['gaze_p0'][i][1] if isExactlyOnePersonInFrame else math.nan,
-                    video_clip['gaze_p0'][i][2] if isExactlyOnePersonInFrame else math.nan
+                    video_clip['gaze_p0'][i][0][0] if isExactlyOnePersonInFrame else math.nan,
+                    video_clip['gaze_p0'][i][0][1] if isExactlyOnePersonInFrame else math.nan,
+                    video_clip['gaze_p0'][i][0][2] if isExactlyOnePersonInFrame else math.nan
                     ))
 
 
