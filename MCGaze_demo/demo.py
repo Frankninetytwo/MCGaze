@@ -1,4 +1,5 @@
 # This script is based on MCGaze/MCGaze_demo/demo.ipynb of https://github.com/zgchen33/mcgaze.
+# All English comments were added by me (Frank Schilling).
 # Note: If there is more than one human head detected in a video frame then the estimated gaze
 # for that frame in Output/processed_video.csv will be nan!
 
@@ -55,25 +56,27 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
     
     with open(output_path, 'w') as f:
         
-        #f.write('frame,timestamp in s,yaw in radians,pitch in radians\n')
-        f.write('frame,timestamp in s,x of gaze vector,y of gaze vector,z of gaze vector\n')
+        f.write('frame,timestamp in s,x of gaze vector,y of gaze vector,z of gaze vector\n')#,yaw in radians,pitch in radians\n')
         
-        for current_frame, video_clip in enumerate(video_clip_list):
-            print('{},{},{}\n'.format(
-                current_frame+1,
-                round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
-                # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0]
-                ))
-            
-            f.write('{},{},{},{},{}\n'.format(
-                current_frame+1,
-                round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
-                # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
-                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0][0][0],
-                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0][0][1],
-                math.nan if ('gaze_p1' in video_clip) else video_clip['gaze_p0'][0][0][2]
-                ))
+        for video_clip in video_clip_list:
+            for i, current_frame in enumerate(video_clip['frame_id']):
+                print('frame: {}, timestamp: {}, gaze vector of person 0 in frame {}: {}\n'.format(
+                    current_frame+1,
+                    round(float(current_frame) * (1.0 / video_fps), 3),
+                    current_frame,
+                    video_clip['gaze_p0'][i]
+                    ))
+                
+                isExactlyOnePersonInFrame = ('gaze_p0' in video_clip) and ('gaze_p1' not in video_clip)
+
+                f.write('{},{},{},{},{}\n'.format(
+                    current_frame+1,
+                    round(float(current_frame) * (1.0 / video_fps), 3), # +/- 0.001 radians (less 0.1 degrees) can be rounded off (easier to compare output file to output from OpenFace)
+                    # Write nan to file if there is more than one human head found in the current frame. In this case I don't know whose gaze to estimate.
+                    video_clip['gaze_p0'][i][0] if isExactlyOnePersonInFrame else math.nan,
+                    video_clip['gaze_p0'][i][1] if isExactlyOnePersonInFrame else math.nan,
+                    video_clip['gaze_p0'][i][2] if isExactlyOnePersonInFrame else math.nan
+                    ))
 
 
 def load_datas(data, test_pipeline, datas):
@@ -104,6 +107,26 @@ if __name__ == '__main__':
 
     frame_id = 0
     person_num = 0
+
+    # Holds information about a sequence of frames in which the amount of people stays the same.
+    # Example:
+    # frame i contains 2 people,
+    # frame i+1 contains 3 people,
+    # frame i+2 also contains 3 people and
+    # frame i+3 contains 4 people. Then the frames (i+1) and (i+2) form a video_clip that looks like this:
+    # {
+    #   # following keys and values are added in the next loop
+    #   'frame_id': [i+1, i+2],
+    #   person_num: 3,
+    #   'p0': [ position_of_head0_in_framei+1, position_of_head0_in_framei+2 ],
+    #   'p1': [ position_of_head1_in_framei+1, position_of_head1_in_framei+2 ],
+    #   'p2': [ position_of_head2_in_framei+1, position_of_head2_in_framei+2 ],
+    #
+    #    # following keys and values are added in the loop that follows after the next loop
+    #    'gaze_p0': [ gaze_vector_of_head0_in_framei+1, gaze_vector_of_head0_in_framei+2 ],
+    #    'gaze_p1': [ gaze_vector_of_head1_in_framei+1, gaze_vector_of_head1_in_framei+2 ],
+    #    'gaze_p2': [ gaze_vector_of_head2_in_framei+1, gaze_vector_of_head2_in_framei+2 ]
+    # }
     video_clip=None
     
     video_clip_set = []
@@ -114,6 +137,7 @@ if __name__ == '__main__':
         w,h,c = frame.shape
         txt_path = str(Path.cwd()) + ('/result/labels/%d.txt' % frame_id)
         f = open(txt_path, 'r')
+        # list of bounding boxes [x1, y1, x2, y2] for each head that was detected in the current frame
         face_bbox = []
         for line in f.readlines():
             line = line.strip()
@@ -127,6 +151,7 @@ if __name__ == '__main__':
         #按第一维排序
         if face_bbox is not None:
             face_bbox = sorted(face_bbox, key= lambda x :x[0])
+            # the amount of people in the current frame equals the amount of heads found
             cur_person_num = len(face_bbox)
         else:
             cur_person_num = 0
@@ -134,15 +159,26 @@ if __name__ == '__main__':
             if video_clip==None:
                 video_clip={'frame_id': [], 'person_num': cur_person_num}
                 video_clip['frame_id'].append(frame_id)
+                # assign to video_clip['p0'] the location of head 0 in the current frame,
+                # assign to video_clip['p1'] the locations of head 1 in the current frame,
+                # etc.
                 for i in range(cur_person_num):
                     video_clip['p'+str(i)]=[face_bbox[i]]
             else:
                 video_clip_set.append(video_clip)
+
                 video_clip={'frame_id': [], 'person_num': cur_person_num}
                 video_clip['frame_id'].append(frame_id)
                 for i in range(cur_person_num):
                     video_clip['p'+str(i)]=[face_bbox[i]]
         else:
+            #
+            # possible BUG:
+            # If there is no head to be found in the first frame then
+            # video_clip==None and cur_person_num==person_num==0, hence this block
+            # will be executed, trying to append to video_clip, but video_clip==None.
+            #
+
             video_clip['frame_id'].append(frame_id)
             for i in range(cur_person_num):
                     video_clip['p'+str(i)].append(face_bbox[i])
@@ -164,7 +200,7 @@ if __name__ == '__main__':
 
 
 
-    print(cfg.data.test.pipeline[1:])
+    #print(cfg.data.test.pipeline[1:])
     test_pipeline = Compose(cfg.data.test.pipeline[1:])
 
 
@@ -176,6 +212,7 @@ if __name__ == '__main__':
         frame_id = clip['frame_id']
         person_num = clip['person_num']
         for i in range(person_num):
+            # contains positions of head i for each frame of the current video clip
             head_bboxes = clip['p'+str(i)]
             clip['gaze_p'+str(i)] = []
             datas = []
@@ -183,6 +220,7 @@ if __name__ == '__main__':
                 cur_img = cv2.imread(str(Path.cwd()) + "/frames/"+str(frame)+".jpg")
                 w,h,_ = cur_img.shape
                 for xy in head_bboxes[j]:
+                    # position of head i in the current frame
                     xy = int(xy)
                 head_center = [int(head_bboxes[j][1]+head_bboxes[j][3])//2,int(head_bboxes[j][0]+head_bboxes[j][2])//2]
                 l = int(max(head_bboxes[j][3]-head_bboxes[j][1],head_bboxes[j][2]-head_bboxes[j][0])*0.8)
