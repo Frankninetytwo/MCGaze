@@ -24,8 +24,7 @@ But **don't do this**! With torch 1.7.1 and mmcv-full 1.4.8 the MMCV CUDA Compil
 16. $ mkdir frames
 17. $ mkdir new_frames
 18. $ mkdir result
-19. $ mkdir result/labels
-
+19. $ mkdir result/labels<br>
 **NOTE**: do not put anything inside the above created folders, not even .gitkeep (hence need to create folders manually)! Their demo code determines frame count n of a video by the amount of images inside these folders. If there is another file inside such folder then the program will try to analyze a file with name "n+1.jpg", which obviously doesn't exist, because the video has only n frames!
 
 Feature extraction works exactly the same way as in my L2CS-Net repo. It's explained at the end of that repo's README.md. The only difference is that the MCGaze feature extraction scripts are not located in the main folder, but in MCGaze/MCGaze_demo.
