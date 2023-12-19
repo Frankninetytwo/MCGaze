@@ -3,7 +3,7 @@ import argparse
 
 def parse_args():
 
-    parser = argparse.ArgumentParser(description='Estimate gazes in a video')
+    parser = argparse.ArgumentParser(description='Estimate gazes in a video using pretrained model')
     
     parser.add_argument(
         '--video',
