@@ -4,7 +4,7 @@ from os.path import isfile
 
 def parse_args():
 
-    parser = argparse.ArgumentParser(description='Estimate gazes in videos')
+    parser = argparse.ArgumentParser(description='Estimate gazes in videos using pretrained model')
     
     parser.add_argument(
         '--videos',
@@ -29,16 +29,13 @@ if __name__ == '__main__':
         print('argument --videos required')
         exit()
 
-    if not os.path.exists(args.videos_path):
-        print('The path \"' + args.videos_path + '\" does not exist!')
-        exit()
-
     if not os.path.isdir(args.videos_path):
-        print('The path \"' + args.videos_path + '\" is not a directory!')
+        print('argument --videos invalid: \"' + args.videos_path + '\" is not a directory!')
         exit()
 
 
     filenames = []
+    
     for file_or_folder in os.listdir(args.videos_path):
         if isfile(args.videos_path + '/' + file_or_folder):
             filenames.append(file_or_folder)
