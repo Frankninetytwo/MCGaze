@@ -119,7 +119,13 @@ if __name__ == '__main__':
     args = parse_args()
 
     frame_id = 0
-    person_num = 0
+
+
+    # MCGaze had assigned 0 to this variable, but that was a bug, because:
+    # If there is no head to be found in the first frame then
+    # video_clip==None and cur_person_num==person_num==0, causing one of the
+    # else blocks below trying to append to video_clip, but video_clip==None.
+    person_num = -1
 
     # Holds information about a sequence of frames in which the amount of people stays the same.
     # Example:
@@ -197,16 +203,9 @@ if __name__ == '__main__':
                 for i in range(cur_person_num):
                     video_clip['p'+str(i)]=[face_bbox[i]]
         else:
-            #
-            # possible BUG:
-            # If there is no head to be found in the first frame then
-            # video_clip==None and cur_person_num==person_num==0, hence this block
-            # will be executed, trying to append to video_clip, but video_clip==None.
-            #
-
             video_clip['frame_id'].append(frame_id)
             for i in range(cur_person_num):
-                    video_clip['p'+str(i)].append(face_bbox[i])
+                video_clip['p'+str(i)].append(face_bbox[i])
         person_num = cur_person_num
         frame_id += 1
 
