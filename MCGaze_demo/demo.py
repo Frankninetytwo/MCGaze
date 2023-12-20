@@ -63,17 +63,21 @@ def write_estimated_gaze_to_file(filename_of_video_without_file_extension, video
 
                 is_exactly_one_person_in_frame = ('gaze_p0' in video_clip) and ('gaze_p1' not in video_clip)
                 
-                gaze_vector_magnitude = math.sqrt(
-                    math.pow(video_clip['gaze_p0'][i][0][0], 2) +
-                    math.pow(video_clip['gaze_p0'][i][0][1], 2) +
-                    math.pow(video_clip['gaze_p0'][i][0][2], 2)
-                    )
-                
-                normalized_gaze_vector = [
-                    video_clip['gaze_p0'][i][0][0] / gaze_vector_magnitude,
-                    video_clip['gaze_p0'][i][0][1] / gaze_vector_magnitude,
-                    video_clip['gaze_p0'][i][0][2] / gaze_vector_magnitude
-                ]
+                normalized_gaze_vector = []
+
+                if is_exactly_one_person_in_frame:
+                    
+                    gaze_vector_magnitude = math.sqrt(
+                        math.pow(video_clip['gaze_p0'][i][0][0], 2) +
+                        math.pow(video_clip['gaze_p0'][i][0][1], 2) +
+                        math.pow(video_clip['gaze_p0'][i][0][2], 2)
+                        )
+                    
+                    normalized_gaze_vector = [
+                        video_clip['gaze_p0'][i][0][0] / gaze_vector_magnitude,
+                        video_clip['gaze_p0'][i][0][1] / gaze_vector_magnitude,
+                        video_clip['gaze_p0'][i][0][2] / gaze_vector_magnitude
+                    ]
 
                 f.write('{},{},{},{},{},{},{},{}\n'.format(
                     current_frame+1,
