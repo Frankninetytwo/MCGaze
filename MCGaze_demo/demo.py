@@ -264,23 +264,23 @@ if __name__ == '__main__':
 
 
 
-
-    for vid_clip in video_clip_set:
-        for i,frame_id in enumerate(vid_clip['frame_id']):  # 遍历每一帧
-            cur_img = cv2.imread(str(Path.cwd()) + "/frames/"+str(vid_clip['frame_id'][i])+".jpg")
-            for j in range(vid_clip['person_num']):  # 遍历每一个人
-                gaze = vid_clip['gaze_p'+str(j)][i][0]
-                head_bboxes = vid_clip['p'+str(j)][i]
-                for xy in head_bboxes:
-                    xy = int(xy)
-                head_center = [int(head_bboxes[1]+head_bboxes[3])//2,int(head_bboxes[0]+head_bboxes[2])//2]
-                l = int(max(head_bboxes[3]-head_bboxes[1],head_bboxes[2]-head_bboxes[0])*1)
-                gaze_len = l*1.0
-                thick = max(5,int(l*0.01))
-                cv2.arrowedLine(cur_img,(head_center[1],head_center[0]),
-                            (int(head_center[1]-gaze_len*gaze[0]),int(head_center[0]-gaze_len*gaze[1])),
-                            (230,253,11),thickness=thick)
-            cv2.imwrite(str(Path.cwd()) + '/new_frames/%d.jpg' % frame_id, cur_img)
+    if args.v:
+        for vid_clip in video_clip_set:
+            for i,frame_id in enumerate(vid_clip['frame_id']):  # 遍历每一帧
+                cur_img = cv2.imread(str(Path.cwd()) + "/frames/"+str(vid_clip['frame_id'][i])+".jpg")
+                for j in range(vid_clip['person_num']):  # 遍历每一个人
+                    gaze = vid_clip['gaze_p'+str(j)][i][0]
+                    head_bboxes = vid_clip['p'+str(j)][i]
+                    for xy in head_bboxes:
+                        xy = int(xy)
+                    head_center = [int(head_bboxes[1]+head_bboxes[3])//2,int(head_bboxes[0]+head_bboxes[2])//2]
+                    l = int(max(head_bboxes[3]-head_bboxes[1],head_bboxes[2]-head_bboxes[0])*1)
+                    gaze_len = l*1.0
+                    thick = max(5,int(l*0.01))
+                    cv2.arrowedLine(cur_img,(head_center[1],head_center[0]),
+                                (int(head_center[1]-gaze_len*gaze[0]),int(head_center[0]-gaze_len*gaze[1])),
+                                (230,253,11),thickness=thick)
+                cv2.imwrite(str(Path.cwd()) + '/new_frames/%d.jpg' % frame_id, cur_img)
 
 
 
