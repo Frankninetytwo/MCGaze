@@ -145,18 +145,30 @@ if __name__ == '__main__':
         frame = cv2.imread(str(Path.cwd()) + ('/frames/%d.jpg' % frame_id))
         w,h,c = frame.shape
         txt_path = str(Path.cwd()) + ('/result/labels/%d.txt' % frame_id)
-        f = open(txt_path, 'r')
-        # list of bounding boxes [x1, y1, x2, y2] for each head that was detected in the current frame
-        face_bbox = []
-        for line in f.readlines():
-            line = line.strip()
-            line = line.split(' ')
-            for i in range(len(line)):
-                line[i] = eval(line[i])
-                #将每一行的数据存入字典
-            if line[0]==1:
-                face_bbox.append([(line[1]),(line[2]),(line[3]),(line[4])])
-        f.close()
+
+        face_bbox = None
+
+        # If person stands up to get some water or something similar then there is no face
+        # found in some frames, hence no face data written to file by head_det.py. That
+        # means there is no such file for this specific frame and that would crash
+        # the program if I don't handle this case here.
+        if os.path.isfile(txt_path):
+            
+            face_bbox = []
+
+            f = open(txt_path, 'r')
+            # list of bounding boxes [x1, y1, x2, y2] for each head that was detected in the current frame
+            
+            for line in f.readlines():
+                line = line.strip()
+                line = line.split(' ')
+                for i in range(len(line)):
+                    line[i] = eval(line[i])
+                    #将每一行的数据存入字典
+                if line[0]==1:
+                    face_bbox.append([(line[1]),(line[2]),(line[3]),(line[4])])
+            f.close()
+
         #按第一维排序
         if face_bbox is not None:
             face_bbox = sorted(face_bbox, key= lambda x :x[0])
