@@ -38,4 +38,4 @@ if __name__ == '__main__':
         exit()
 
     os.system('python3 head_det.py --video {}'.format(args.video_path))
-    os.system('python3 demo.py {}{}'.format(args.timestamp_to_start_at, ' -v' if args.v else ''))
+    os.system('python3 demo.py --timestamp-to-start-at {}{}'.format(args.timestamp_to_start_at, ' -v' if args.v else ''))
