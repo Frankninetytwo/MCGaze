@@ -285,11 +285,11 @@ if __name__ == '__main__':
 
 
 
-    img = cv2.imread(str(Path.cwd()) + '/new_frames/0.jpg')  #读取第一张图片
+    img = cv2.imread(str(Path.cwd()) + '/frames/0.jpg')  #读取第一张图片
     source_video_path, video_fps = get_source_video_info()
     imgInfo = img.shape
     size = (imgInfo[1],imgInfo[0])  #获取图片宽高度信息
-    print('image (width, height) =', size)
+    #print('image (width, height) =', size)
 
     write_estimated_gaze_to_file(Path(source_video_path).stem, video_clip_set, video_fps)
 
