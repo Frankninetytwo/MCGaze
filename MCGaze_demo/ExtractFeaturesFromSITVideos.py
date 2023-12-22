@@ -3,7 +3,7 @@ import time
 
 if __name__ == '__main__':
 
-    end_of_SIT_introduction_timestamp = 130.0
+    end_of_SIT_introduction_timestamp = 0.0
 
     # This list needs to be fill with paths to each SIT video file, e.g.
     # paths_of_SIT_videos = [ 'Path_to_SIT_Videos/Participant_1/videoname.mp4', 'Path_to_SIT_Videos/Participant_2/videoname.avi', ... ]
